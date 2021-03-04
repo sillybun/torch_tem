@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Tue Feb 11 14:33:06 2020
+Created on Tue Feb 11 14: 33: 06 2020
 
 @author: jacobb
 """
 import json
 import numpy as np
-import torch
+from import_torch import torch
 import copy
 from scipy.sparse.csgraph import shortest_path
 
@@ -18,7 +18,7 @@ class World:
         # If the environment is provided as a filename: load the corresponding file. If it's no filename, it's assumed to be an environment dictionary
         if type(env) == str or type(env) == np.str_:
             # Filename provided, load graph from json file
-            file = open(env, 'r') 
+            file = open(env, 'r')
             json_text = file.read()
             env = json.loads(json_text)
             file.close()
@@ -33,7 +33,7 @@ class World:
             self.n_observations = env['n_observations']
         except (KeyError, TypeError) as e:
             # If any of the expected fields is missing: treat this as an invalid environment
-            print('Invalid environment: bad dictionary\n', e)            
+            print('Invalid environment: bad dictionary\n', e)
             # Initialise all environment fields for an empty environment
             self.adjacency = []
             self.locations = []
@@ -198,13 +198,13 @@ class World:
             # Check if the shiny object was found in this step
             if new_location['id'] == self.shiny['locations'][shiny_current]:
                 # After shiny object is found, start counting down for hanging around
-                shiny_returns -= 1            
+                shiny_returns -= 1
             # Check if it's time to select new object to approach
             if shiny_returns < 0:
                 # Pick new current shiny object to approach
                 shiny_current = np.random.randint(self.shiny['n'])
                 # Reset number of iterations to hang around an object once found
-                shiny_returns = self.shiny['returns']                            
+                shiny_returns = self.shiny['returns']
             # Get new observation at new location
             new_observation = self.get_observation(new_location)
             # Get new action based on policy of new location towards shiny object
@@ -219,8 +219,8 @@ class World:
         if len(walk) == 0:
             new_location = np.random.randint(self.n_locations)
         # Any other step: get new location from previous location and action
-        else:                        
-            new_location = int(np.flatnonzero(np.cumsum(walk[-1][0]['actions'][walk[-1][2]]['transition'])>np.random.rand())[0])
+        else:
+            new_location = int(np.flatnonzero(np.cumsum(walk[-1][0]['actions'][walk[-1][2]]['transition']) > np.random.rand())[0])
         # Return the location dictionary of the new location
         return self.locations[new_location]
     
@@ -234,16 +234,16 @@ class World:
         
     def get_action(self, new_location, walk, repeat_bias_factor=2):
         # Build policy from action probability of each action of provided location dictionary
-        policy = np.array([action['probability'] for action in new_location['actions']])        
+        policy = np.array([action['probability'] for action in new_location['actions']])
         # Add a bias for repeating previous action to walk in straight lines, only if (this is not the first step) and (the previous action was a move)
-        policy[[] if len(walk) == 0 or new_location['id'] == walk[-1][0]['id'] else walk[-1][2]] *= repeat_bias_factor
+        policy[[] if len(walk) == 0 or new_location['id'] == walk[-1] [0]['id'] else walk[-1][2]] *= repeat_bias_factor
         # And renormalise policy (note that for unavailable actions, the policy was 0 and remains 0, so in that case no renormalisation needed)
         policy = policy / sum(policy) if sum(policy) > 0 else policy
         # Select action in new state
-        new_action = int(np.flatnonzero(np.cumsum(policy)>np.random.rand())[0])
+        new_action = int(np.flatnonzero(np.cumsum(policy) > np.random.rand())[0])
         # Return the new action
         return new_action
-    
+
     def get_reward(self, reward_locations):
         # Stick reward location into a list if there is only one reward location. Use multiple reward locations simultaneously for e.g. wall attraction
         reward_locations = [reward_locations] if type(reward_locations) is not list else reward_locations
@@ -259,11 +259,5 @@ class World:
             total_probability = sum([action['probability'] for action in new_locations[reward_location]['actions']])
             # Renormalise action probabilities
             for action in new_locations[reward_location]['actions']:
-                action['probability'] = action['probability'] / total_probability if total_probability > 0 else action['probability']
+                action['probability'] = action['probability'] /  total_probability if total_probability > 0 else action['probability']
         return new_locations, reward_locations
-        
-        
-        
-        
-        
-        

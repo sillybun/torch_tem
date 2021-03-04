@@ -8,7 +8,7 @@ Created on Thu Feb 20 14:57:45 2020
 
 # Standard library imports
 import numpy as np
-import torch
+from import_torch import torch
 from torch.utils.tensorboard import SummaryWriter
 import time
 # Own module imports

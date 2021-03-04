@@ -7,7 +7,7 @@ Created on Wed Feb 12 09:42:32 2020
 """
 
 import numpy as np
-import torch
+from import_torch import torch
 from scipy.special import comb
 
 # This contains one single function that generates a dictionary of parameters, which is provided to the model on initialisation

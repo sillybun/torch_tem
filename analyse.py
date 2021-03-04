@@ -6,7 +6,8 @@ Created on Thu May 28 15:01:34 2020
 @author: jacobb
 """
 import numpy as np
-import torch
+# import torch
+from import_torch import torch
 import pdb
 import copy
 

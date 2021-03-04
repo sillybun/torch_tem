@@ -6,7 +6,7 @@ Created on Wed Feb 12 15:03:58 2020
 @author: jacobb
 """
 
-import torch
+from import_torch import torch
 import numpy as np
 import os
 import datetime
